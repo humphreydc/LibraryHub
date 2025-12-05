@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="logoicon.jpg" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
+  <title>LibraryHub - Book Borrowing System</title>
+  <!--Bootstrap-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<!-- AUTH PAGE -->
+<div id="authPage">
+  <div class="auth-container">
+    <div class="logos">
+      <img src="images/CEIS logo.png" alt="department logo">
+      <img src="images/TUA logo.png" alt="school logo">
+    </div>
+    <h1 class="text-center" style="color: #8FA31E; font-size: 2rem; margin: 0;">LibraryHub</h1>
+    <p class="text-center mb-2">Library Book Borrowing System</p>
+
+    <div class="auth-tabs">
+      <button id="loginTab" class="active">User Login</button>
+      <button id="signupTab">Sign Up</button>
+      <button id="adminLoginTab">Admin Login</button>
+    </div>
+
+    <form id="loginForm" class="auth-form">
+      <div class="form-group"><label>Email</label><input type="email" id="loginEmail" class="form-input" required /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" class="form-input" required /></div>
+      <div class="forgot" id="forgotPasswordStudent">Forgot your password?</div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Login</button>
+      <p class="error-message" id="loginError"></p>
+      <p class="success-message" id="loginSuccess"></p>
+    </form>
+
+    <form id="signupForm" class="auth-form hidden">
+      <div class="form-group"><label>Full Name</label><input type="text" id="signupName" class="form-input" required /></div>
+      <div class="form-group"><label>Email</label><input type="email" id="signupEmail" class="form-input" required /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="signupPassword" class="form-input" required /></div>
+      <div class="form-group"><label>Phone Number</label><input type="tel" id="signupPhone" class="form-input" required /></div>
+      <div class="form-group"><label>Student/Member ID</label><input type="text" id="signupMemberId" class="form-input" required /></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Sign Up</button>
+      <p class="error-message" id="signupError"></p>
+    </form>
+
+    <form id="adminLoginForm" class="auth-form hidden">
+      <div class="form-group"><label>Admin Email</label><input type="email" id="adminLoginEmail" class="form-input" required /></div>
+      <div class="form-group"><label>Admin Password</label><input type="password" id="adminLoginPassword" class="form-input" required /></div>
+      <div class="forgot" id="forgotPasswordAdmin">Forgot your password?</div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Admin Login</button>
+      <p class="error-message" id="adminLoginError"></p>
+      <p class="success-message" id="adminLoginSuccess"></p>
+      <p style="margin-top: 15px; padding: 10px; background: #f0f8ff; border-radius: 6px; font-size: 13px; color: #1e3c72;">
+        <strong>Demo Admin Account:</strong><br>
+        Email: admin@library.com<br>
+        Password: admin123
+      </p>
+    </form>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" class="hidden" style="background-color:white;">
+  <nav class="navbar navbar-expand-lg fixed-top bg-light">
+    <div class="container-fluid">
+
+      <a class="navbar-brand fs-2 fw-bold" style="color: #8FA31E;" href="#">LibraryHub</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+        aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title">Menu</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+
+        <div class="offcanvas-body">
+
+          <!-- center on desktop, left on mobile -->
+          <ul class="navbar-nav mb-2 mb-lg-0 mx-lg-auto text-lg-center align-items-start">
+            <li class="nav-item">
+              <a id="navBrowse" class="nav-link active" href="#" style="color: #657315;">Browse Books</a>
+            </li>
+            <li class="nav-item" id="navMyBooksItem">
+              <a id="navMyBooks" class="nav-link active" href="#" style="color: #657315;">Borrowed Books</a>
+            </li>
+            <li class="nav-item hidden" id="navAdminItem">
+              <a id="navAdmin" class="nav-link active" href="#" style="color: #657315;">Admin Panel</a>
+            </li>
+          </ul>
+
+          <button id="student-profile" class="btn btn-outline-secondary d-flex align-items-center mb-2 ms-lg-2" style="border-radius: 50px; padding: 8px 16px;">
+            <img id="profile-pic" src="images/user-solid-full.svg" alt="user profile" style="width: 24px; height: 24px; margin-right: 8px;">
+            <span id="currentUser" class="fw-bold">Username</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <!--Header bg-->
+  <div class="header-bg" style="background-color: lightblue; height: 50vh; background-image: url('images/cover.png');">
+    <div class="black d-flex justify-content-center align-items-center">
+      <h1 class="display-6 fw-bold" style="color:#B4CD2A;">Welcome to LibraryHub</h1>
+    </div>
+  </div>
+
+  <div class="container-sched" style="display: flex; justify-content: center; margin-top: 50px;">
+    <div class="schedule" 
+    style="
+    max-width: 767px;
+    width: 90%; 
+    border: 2px solid #e0e0e0;;
+    padding: 20px 30px;
+    color:#556B2F;
+    border-radius: 12px;
+    font-weight: bold;
+    box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.10);">
+      <h2>Library Operating Hours</h2>
+      <div style="line-height: 1; margin-top: 20px;">
+        <p>Monday - Friday : 8 AM - 5 PM</p>
+        <p>Saturday: 8AM - 12PM</p>
+        <p>Sunday: Closed</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- BROWSE BOOKS SECTION -->
+  <div id="browseSection" class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin: 30px 0; flex-wrap: wrap; gap: 20px;">
+      <h2 style="color: #556B2F; font-weight: bold; margin: 0;">Available Books</h2>
+      <div class="d-flex align-items-center">
+        <label for="categoryFilter" class="me-2" style="white-space: nowrap; font-weight: 600; color: #556B2F;">Category:</label>
+        <select id="categoryFilter" class="form-select" style="width: auto; min-width: 180px;">
+          <option value="">All Categories</option>
+          <option value="Fiction">Fiction</option>
+          <option value="Non-Fiction">Non-Fiction</option>
+          <option value="Science">Science</option>
+          <option value="Technology">Technology</option>
+          <option value="History">History</option>
+          <option value="Biography">Biography</option>
+          <option value="Education">Education</option>
+          <option value="Children">Children</option>
+          <option value="Others">Others</option>
+        </select>
+      </div>
+    </div>
+    <div id="booksGrid" class="books-grid"></div>
+  </div>
+
+  <!-- MY BORROWED BOOKS SECTION -->
+  <div id="myBooksSection" class="container hidden">
+    <h2 style="margin-bottom: 30px;">My Borrowed Books</h2>
+    <div id="borrowedBooksList"></div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel" class="container hidden"></div>
+</div>
+
+<!-- BOOTSTRAP 5 MODAL: ADD/EDIT BOOK -->
+<div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Add New Book</h5>
+        <button type="button" class="btn-close" id="closeModal" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="bookForm">
+          <input type="hidden" id="bookId" />
+          
+          <div class="form-group mb-3">
+            <label class="form-label">Book Title</label>
+            <input id="bookTitle" class="form-control" required />
+          </div>
+          
+          <div class="form-group mb-3">
+            <label class="form-label">Author</label>
+            <input id="bookAuthor" class="form-control" required />
+          </div>
+          
+          <div class="form-group mb-3">
+            <label class="form-label">ISBN</label>
+            <input id="bookISBN" class="form-control" required />
+          </div>
+          
+          <div class="form-group mb-3">
+            <label class="form-label">Category</label>
+            <select id="bookCategory" class="form-select" required>
+              <option value="">Select Category</option>
+              <option value="Fiction">Fiction</option>
+              <option value="Non-Fiction">Non-Fiction</option>
+              <option value="Science">Science</option>
+              <option value="Technology">Technology</option>
+              <option value="History">History</option>
+              <option value="Biography">Biography</option>
+              <option value="Education">Education</option>
+              <option value="Children">Children</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+          
+          <div class="form-group mb-3">
+            <label class="form-label">Publisher</label>
+            <input id="bookPublisher" class="form-control" required />
+          </div>
+          
+          <div class="form-group mb-3">
+            <label class="form-label">Publication Year</label>
+            <input type="number" id="bookYear" class="form-control" required />
+          </div>
+          
+          <div class="form-group mb-3">
+            <label class="form-label">Total Copies</label>
+            <input type="number" id="bookCopies" class="form-control" min="1" required />
+          </div>
+          
+          <div class="form-group mb-3">
+            <label class="form-label">Description</label>
+            <textarea id="bookDescription" class="form-control" rows="4" required></textarea>
+          </div>
+          
+          <div class="form-group mb-3">
+            <label class="form-label">Book Cover (Optional)</label>
+            <input type="file" id="bookImage" class="form-control" accept="image/*" />
+            <div id="imagePreview"></div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelBtn" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="submitBookBtn">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOTSTRAP 5 MODAL: VIEW BOOK DETAILS -->
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewModalLabel">Book Details</h5>
+        <button type="button" class="btn-close" id="closeViewModal" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="viewBookContent"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOTSTRAP 5 MODAL: USER PROFILE -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center" style="padding: 40px 30px; overflow: hidden;">
+        <div style="width: 120px; height: 120px; margin: 0 auto 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+          <img src="images/user-solid-full.svg" alt="user profile" style="width: 70px; filter: brightness(0) invert(1);">
+        </div>
+        <div id="profileContent" style="text-align: left; max-width: 100%; margin: 0 auto; word-wrap: break-word;">
+          <!-- Profile details will be inserted here -->
+        </div>
+        <button id="logoutBtn" class="btn btn-danger w-100 mt-4" style="padding: 12px; font-weight: bold; border-radius: 8px;">Log Out</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Import the JavaScript file -->
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
